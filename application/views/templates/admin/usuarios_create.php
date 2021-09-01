@@ -12,7 +12,7 @@
 	<tr>
             <td>E-Mail:</td>
             <td><input type="text" name="correo" class="form-control" value="<?php echo set_value('correo'); ?>"></td>
-	</tr>    
+	</tr>
 	<tr>
             <td>Contrase&ntilde;a:</td>
             <td><input type="password" name="passwordoriginal" class="form-control" value="<?php echo set_value('passwordoriginal'); ?>"></td>
@@ -30,8 +30,12 @@
             <td><input type="text" name="apellidos" class="form-control" value="<?php echo set_value('apellidos'); ?>"></td>
 	</tr>
 	<tr>
-            <td>RUT:</td>
+            <td>RUN:</td>
             <td><input type="text" name="rut" class="form-control" value="<?php echo set_value('rut'); ?>"></td>
+    </tr>
+    <tr>
+        <td>Tel&eacute;fono:</td>
+        <td><input type="text" name="fono" class="form-control" value="<?php echo set_value('rut'); ?>"></td>
     </tr>
     <tr>
         <td>Empresa:</td>
@@ -40,13 +44,13 @@
                 <option value="-0" selected="selected" disabled="disabled">Elegir empresa</option>
                 <?php
                     for($n = 0; $n < count($empresas); $n++){
-                        echo "<option value=\"".$empresas[$n]['empresa']."\">".$empresas[$n]['empresa']."</option>";
+                        echo "<option value=\"".$empresas[$n]['rut']."\">".$empresas[$n]['empresa']."</option>";
                     }
-                ?>                
+                ?>
             </select>
 
         </td>
-    </tr>    
+    </tr>
 	<tr>
             <td>Direcci&oacute;n:</td>
             <td><input type="text" name="direccion" class="form-control" value="<?php echo set_value('direccion'); ?>"></td>
@@ -62,11 +66,11 @@
                     ?>
                 </select>
             </td>
-	</tr>		
+	</tr>
 	<tr>
             <td colspan="2">
                 <input type="submit" class="btn btn-primary" value="Crear nuevo usuario">
             </td>
-	</tr>	
+	</tr>
 </table>
 <?php echo form_close(); ?>

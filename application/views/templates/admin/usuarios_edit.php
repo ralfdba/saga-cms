@@ -14,7 +14,7 @@
         <td>
             <input type="text" name="id" class="form-control" value="<?php echo $usuarios_select[0]['id']; ?>" readonly="">
         </td>
-    </tr>    
+    </tr>
     <tr>
         <td>Contrase&ntilde;a:</td>
         <td><input type="password" name="passwordoriginal" class="form-control" value="<?php echo set_value('passwordoriginal'); ?>"></td>
@@ -32,21 +32,37 @@
         <td><input type="text" name="apellidos" class="form-control" value="<?php echo $usuarios_select[0]['last_name']; ?>"></td>
     </tr>
     <tr>
+        <td>E-Mail:</td>
+        <td><input type="text" name="correo" class="form-control" value="<?php echo $usuarios_select[0]['email']; ?>"></td>
+    </tr>
+    <tr>
+        <td>RUN:</td>
+        <td><input type="text" name="run" class="form-control" value="<?php echo $usuarios_select[0]['rut']; ?>"></td>
+    </tr>
+    <tr>
+        <td>Tel&eacute;fono:</td>
+        <td><input type="text" name="fono" class="form-control" value="<?php echo $usuarios_select[0]['phone']; ?>"></td>
+    </tr>
+    <tr>
         <td>Empresa:</td>
         <td>
             <select name="empresa" class="form-control">
+              <option value="-1" selected disabled>Elegir</option>
                 <?php
-                    if($usuarios_select[0]['company']){
-                        echo "<option value=\"".$usuarios_select[0]['id']."\" selected=\"selected\">".$usuarios_select[0]['company']."</option>"; 
+                    $sel = [];
+                    for( $n = 0; $n < count($empresas); $n++ ){
+                      if( $usuarios_select[0]['company'] == $empresas[$n]['rut'] ){
+                        $sel[] = "selected='selected'";
+                      } else {
+                        $sel[] = "";
+                      }
+                        echo "<option value=\"".$empresas[$n]['rut']."\" ".$sel[$n].">".$empresas[$n]['empresa']."</option>";
                     }
-                    for($n = 0; $n < count($empresas); $n++){
-                        echo "<option value=\"".$empresas[$n]['empresa']."\">".$empresas[$n]['empresa']."</option>";
-                    }
-                ?>                
+                ?>
             </select>
 
         </td>
-    </tr>    
+    </tr>
     <tr>
         <td>Direcci&oacute;n:</td>
         <td><input type="text" name="direccion" class="form-control" value="<?php echo $usuarios_select[0]['direccion']; ?>"></td>
@@ -67,11 +83,11 @@
                 ?>
             </select>
         </td>
-    </tr>		
+    </tr>
     <tr>
         <td colspan="2">
             <input type="submit" class="btn btn-primary" value="Editar usuario">
         </td>
-    </tr>	
+    </tr>
 </table>
 <?php echo form_close(); ?>

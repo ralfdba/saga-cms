@@ -2,14 +2,14 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Description of Login
- * 
+ *
  * @author ralf
- * @desc Login general para la aplicación, determina según el tipo de perfil de 
+ * @desc Login general para la aplicación, determina según el tipo de perfil de
  * usuario a que controlador debe ingresar
  */
 class Login extends CI_Controller{
     private $remember = TRUE;
-    
+
     public function __construct(){
         parent::__construct();
         $this->load->model(array(
@@ -22,18 +22,18 @@ class Login extends CI_Controller{
             ));
         $this->load->helper(array('url','language'));
         $this->form_validation->set_error_delimiters(
-        $this->config->item('error_start_delimiter', 'ion_auth'), 
+        $this->config->item('error_start_delimiter', 'ion_auth'),
         $this->config->item('error_end_delimiter', 'ion_auth'));
         $this->lang->load('auth');
     }
-    
-    
+
+
     public function index(){
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 redirect('admin/usuarios', 'refresh');
             }else{
-                redirect($this->config->item('template_custom').'/usuarios', 'refresh');
+                redirect($this->config->item('template_custom').'/dashboard', 'refresh');
             }
         }else{
             $data['message'] = "";
@@ -43,14 +43,14 @@ class Login extends CI_Controller{
             $this->form_validation->set_error_delimiters(
                     '<div class="alert alert-danger">', '</div>');
             $this->form_validation->set_rules(
-                    'correo', str_replace(':', '', 
+                    'correo', str_replace(':', '',
                             $this->lang->line('login_identity_label')),
                     'required');
             $this->form_validation->set_rules(
                     'password', str_replace(':', '',
                             $this->lang->line('login_password_label')),
                     'required');
-            
+
             if ($this->form_validation->run() == FALSE){
                 $this->vistas->__render_login(NULL,'index');
             }else{
@@ -63,7 +63,7 @@ class Login extends CI_Controller{
                     if($this->ion_auth->is_admin()){
                         redirect('admin/usuarios', 'refresh');
                     }else{
-                        redirect($this->config->item('template_custom').'/usuarios', 'refresh');
+                        redirect($this->config->item('template_custom').'/dashboard', 'refresh');
                     }
                 }else{
                     if(validation_errors() == FALSE){
@@ -74,7 +74,7 @@ class Login extends CI_Controller{
             }
         }
     }
-    
+
     /**
      * Olvido contraseña
      * **/
@@ -244,10 +244,11 @@ class Login extends CI_Controller{
 
     public function logout(){
         if($this->ion_auth->logged_in()){
-            $this->permisos->logout();
+            $this->ion_auth->logout();
+            redirect('login/index', 'refresh');
         }else{
             redirect('login/index', 'refresh');
         }
-    }        
-        
+    }
+
 }
