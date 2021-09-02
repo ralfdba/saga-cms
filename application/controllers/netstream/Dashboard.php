@@ -17,7 +17,7 @@ class Dashboard extends CI_Controller{
             ));
         $this->load->helper(array('url','language'));
     }
-    
+
     public function index(){
         if($this->ion_auth->logged_in()){
             $data['metadata'] = "Soluciones y servicios IT para su empresa, "
@@ -25,13 +25,9 @@ class Dashboard extends CI_Controller{
                     . "Desarrollo de software, "
                     . "Instalación de camaras IP, "
                     . "Instalación de redes";
-            $data['titulo_site'] = "Virtualización de Servidores - Servicios IT - Consultoría IT";            
+            $data['titulo_site'] = "Virtualización de Servidores - Servicios IT - Consultoría IT";
             $data['info_usuario'] = $this->permisos->get_user_data();
-            if($this->ion_auth->is_admin()){                
-                $this->vistas->__render_admin($data,'dashboard');
-            }else{
-                $this->vistas->__render($data,'dashboard');
-            }
+            $this->vistas->__render($data,'dashboard');
         }else{
             redirect("login/index", 'refresh');
         }
