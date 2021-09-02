@@ -19,7 +19,16 @@ class Mensajeria extends CI_Controller{
                 'ion_auth'
             ));
     }
-    
+
+    private function __endpoint() {
+      $opt = array (
+        "controller" => "mensajeria",
+        "path" => "admin"
+      );
+
+      return $opt;
+    }
+
     public function index(){
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
@@ -29,8 +38,8 @@ class Mensajeria extends CI_Controller{
                 $start_index = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
                 $total_records = $this->mensajeria_model->get_total();
                 if ($total_records > 0){
-                    $data["results"] = $this->mensajeria_model->get_current_page_records($limit_per_page, $start_index);             
-                    $config['base_url'] = site_url() . '/admin/mensajeria/index';
+                    $data["results"] = $this->mensajeria_model->get_current_page_records($limit_per_page, $start_index);
+                    $config['base_url'] = site_url() . $this->__endpoint()["path"] ."/". $this->__endpoint()["controller"] ."/index";
                     $config['total_rows'] = $total_records;
                     $config['per_page'] = $limit_per_page;
                     $config["uri_segment"] = 4;
@@ -44,7 +53,7 @@ class Mensajeria extends CI_Controller{
             }
         }else{
             redirect("login/index", 'refresh');
-        }        
+        }
     }
     public function create(){
         if($this->ion_auth->logged_in()){
@@ -73,25 +82,25 @@ class Mensajeria extends CI_Controller{
                     if(is_null($resp)){
                         $data['message'] = "Error al crear nuevo tipo de mensajer&iacute;a";
                     }else{
-                        $data['message'] = "Exito al crear nuevo tipo de mensajer&iacute;a"
-                                . ".&nbsp;<a href=\"".$this->agent->referrer()  ."\">Volver</a>";
-                    }            
+                        $data['message'] = "Exito al crear nuevo tipo de mensajer&iacute;a";
+                    }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data, 'error');
-        
+
                 }
             }else{
                 redirect("login/index", 'refresh');
             }
         }else{
             redirect("login/index", 'refresh');
-        }         
+        }
     }
     public function edit($id = NULL){
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 if($id){
                     $params['mensajeria_id'] = $id;
-                    $data['mensajeria_select'] = $this->mensajeria_model->selectbyid($params);            
+                    $data['mensajeria_select'] = $this->mensajeria_model->selectbyid($params);
                 }
                 $data['info_usuario'] = $this->permisos->get_user_data();
 		    $data['maestros'] = $this->maestros_model->select_all();
@@ -121,18 +130,18 @@ class Mensajeria extends CI_Controller{
                     if($resp == 0){
                         $data['message'] = "Error al editar tipo de mensajer&iacute;a";
                     }else{
-                        $data['message'] = "Exito al editar tipo de mensajer&iacute;a"
-                                . ".&nbsp;<a href=\"".$this->agent->referrer()  ."\">Volver</a>";
-                    }            
+                        $data['message'] = "Exito al editar tipo de mensajer&iacute;a";
+                    }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data, 'error');
-        
+
                 }
             }else{
                 redirect("login/index", 'refresh');
             }
         }else{
             redirect("login/index", 'refresh');
-        }        
+        }
     }
     public function delete($id = NULL){
         if($this->ion_auth->logged_in()){
@@ -141,11 +150,11 @@ class Mensajeria extends CI_Controller{
                 if($id){
                     $resp = $this->mensajeria_model->delete($id);
                     if($resp > 0){
-                            $data['message'] = "Exito al eliminar notificaci&oacute;n"
-                            . ".&nbsp;<a href=\"".$this->agent->referrer()."\">Volver</a>";
+                            $data['message'] = "Exito al eliminar notificaci&oacute;n";
                     }else{
                         $data['message'] = "Error al eliminar notificaci&oacute;n;";
-                    }            
+                    }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data,'error');
                 }
             }else{
@@ -153,17 +162,7 @@ class Mensajeria extends CI_Controller{
             }
         }else{
             redirect("login/index", 'refresh');
-        }         
+        }
     }
-    public function envio_masivo(){
-        if($this->ion_auth->logged_in()){
-            if($this->ion_auth->is_admin()){
 
-            }else{
-                redirect("login/index", 'refresh');
-            }
-        }else{
-            redirect("login/index", 'refresh');
-        }        
-    }
 }

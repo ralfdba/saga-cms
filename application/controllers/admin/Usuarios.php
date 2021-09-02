@@ -19,6 +19,15 @@ class Usuarios extends CI_Controller{
             ));
     }
 
+    private function __endpoint() {
+      $opt = array (
+        "controller" => "usuarios",
+        "path" => "admin"
+      );
+
+      return $opt;
+    }
+
     public function index(){
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
@@ -29,7 +38,7 @@ class Usuarios extends CI_Controller{
                 $total_records = $this->usuarios_model->get_total();
                 if ($total_records > 0){
                     $data["results"] = $this->usuarios_model->get_current_page_records($limit_per_page, $start_index);
-                    $config['base_url'] = site_url() . '/admin/usuarios/index';
+                    $config['base_url'] = site_url() . $this->__endpoint()["path"] ."/". $this->__endpoint()["controller"] ."/index";
                     $config['total_rows'] = $total_records;
                     $config['per_page'] = $limit_per_page;
                     $config["uri_segment"] = 4;
@@ -98,12 +107,11 @@ class Usuarios extends CI_Controller{
                     if($this->ion_auth->update($this->input->post('id'), $opc)){
                         $this->ion_auth->remove_from_group($group, $this->input->post('id'));
                         $this->ion_auth->add_to_group($group, $this->input->post('id'));
-                        $data['message'] = "Exito en la actualizaci&oacute;n del usuario."
-                                . "&nbsp; <a href=\"".$this->config->item('url_sistema')."admin/usuarios"."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                        $data['message'] = "Exito en la actualizaci&oacute;n del usuario";
                     }else{
-                        $data['message'] = "Error en la actualizaci&0acute;n del usuario. Intente nuevamente."
-                                . "&nbsp; <a href=\"".$this->config->item('url_sistema')."admin/usuarios"."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                        $data['message'] = "Error en la actualizaci&0acute;n";
                     }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data, 'error');
 
                 }
@@ -120,12 +128,11 @@ class Usuarios extends CI_Controller{
                 if($id){
                     $data['info_usuario'] = $this->permisos->get_user_data();
                     if($this->ion_auth->deactivate($id)){
-                        $data['message'] = "Exito al eliminar"
-                            . "&nbsp; <a href=\"".$this->config->item('url_sistema')."admin/usuarios"."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                        $data['message'] = "Exito al eliminar";
                     }else{
-                        $data['message'] = "Error al eliminar"
-                            . "&nbsp; <a href=\"".$this->config->item('url_sistema')."admin/usuarios"."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                        $data['message'] = "Error al eliminar";
                     }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data,'error');
                 }else{
                     redirect("login/index", 'refresh');
@@ -143,12 +150,11 @@ class Usuarios extends CI_Controller{
                 if($id){
                     $data['info_usuario'] = $this->permisos->get_user_data();
                     if($this->ion_auth->activate($id)){
-                        $data['message'] = "Exito al activar."
-                            . "&nbsp; <a href=\"".$this->config->item('url_sistema')."admin/usuarios"."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                        $data['message'] = "Exito al activar";
                     }else{
-                        $data['message'] = "Error al activar."
-                            . "&nbsp; <a href=\"".$this->config->item('url_sistema')."admin/usuarios"."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                        $data['message'] = "Error al activar";
                     }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data,'error');
                 }else{
                     redirect("login/index", 'refresh');
@@ -204,8 +210,7 @@ class Usuarios extends CI_Controller{
                             $result = $this->ion_auth->register('', $password, $email, $additional_data, $group);
                             if($result != FALSE){
                                 $data['message'] = "Exito en la creaci&oacute;n del nuevo registro."
-                                        . "&nbsp; Un e-mail de confirmaci&oacute;n ha sido enviado a: ".$email
-                                        . "&nbsp; <a href=\"".$this->config->item('url_sistema')."admin/usuarios"."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                                        . "&nbsp; Un e-mail de confirmaci&oacute;n ha sido enviado a: ".$email;
                                 $this->notificaciones->sent_notificacion_registro_confirmacion($result);
                             }else{
                                 $data['message'] = "Error en la creaci&oacute;n del nuevo registro. Intente nuevamente.";
@@ -217,7 +222,7 @@ class Usuarios extends CI_Controller{
                         //retorna error de validez de rut
                         $data['message'] = "RUN: <strong>".$this->input->post('rut')."</strong> no v&aacute;lido.";
                     }
-
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data, 'error');
 
                 }

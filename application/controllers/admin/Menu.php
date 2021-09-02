@@ -17,7 +17,16 @@ class Menu extends CI_Controller{
                 'ion_auth'
             ));
     }
-    
+
+    private function __endpoint() {
+      $opt = array (
+        "controller" => "menu",
+        "path" => "admin"
+      );
+
+      return $opt;
+    }
+
     public function index(){
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
@@ -27,15 +36,15 @@ class Menu extends CI_Controller{
                 $start_index = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
                 $total_records = $this->menu_model->get_total();
                 if ($total_records > 0){
-                    $data["results"] = $this->menu_model->get_current_page_records($limit_per_page, $start_index);             
-                    $config['base_url'] = site_url() . '/admin/menu/index';
+                    $data["results"] = $this->menu_model->get_current_page_records($limit_per_page, $start_index);
+                    $config['base_url'] = site_url() . $this->__endpoint()["path"] ."/". $this->__endpoint()["controller"] ."/index";
                     $config['total_rows'] = $total_records;
                     $config['per_page'] = $limit_per_page;
                     $config["uri_segment"] = 4;
                     //
                     $this->pagination->initialize($config);
                     $data["links"] = $this->pagination->create_links();
-                }        
+                }
                 $this->vistas->__render_admin($data,'menu');
             }else{
                 redirect("login/index", 'refresh');
@@ -44,7 +53,7 @@ class Menu extends CI_Controller{
             redirect("login/index", 'refresh');
         }
     }
-    
+
     public function add(){
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
@@ -55,7 +64,7 @@ class Menu extends CI_Controller{
                 $this->form_validation->set_rules('desc', 'Descripci&oacute;n men&uacute;', 'trim|min_length[2]|max_length[40]');
                 $this->form_validation->set_rules('controlador', 'Ruta controlador', 'required|trim|min_length[2]|max_length[150]');
                 $this->form_validation->set_rules('orden', 'Orden de muestra', 'required|trim|integer|min_length[1]|max_length[2]');
-                $this->form_validation->set_rules('front', 'Front', 'required|trim|integer|min_length[1]|max_length[2]'); 
+                $this->form_validation->set_rules('front', 'Front', 'required|trim|integer|min_length[1]|max_length[2]');
                 if ($this->form_validation->run() == FALSE){
                     $this->vistas->__render_admin($data,'menu_add');
                 }else{
@@ -70,11 +79,11 @@ class Menu extends CI_Controller{
                     $params['front'] = $this->input->post('front');
                     $resp = $this->menu_model->insert($params);
                     if(is_null($resp)){
-                        $data['message'] = "Error al crear el nuevo &iacutetem de men&uacute;: <strong>".$params['nombre']."</strong>";
+                        $data['message'] = "Error al crear el nuevo &iacutetem";
                     }else{
-                        $data['message'] = "Exito al crear el nuevo &iacutetem de men&uacute;: <strong>".$params['nombre']."</strong>"
-                                . ".&nbsp; &nbsp; <a href=\"".$this->agent->referrer()  ."\">Volver</a>";
+                        $data['message'] = "Exito al crear el nuevo &iacutetem";
                     }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data,'error');
                 }
             }else{
@@ -91,19 +100,19 @@ class Menu extends CI_Controller{
                 if($id){
                     $resp = $this->menu_model->delete($id);
                     if($resp > 0){
-                            $data['message'] = "Exito al eliminar &iacutetem de men&uacute;"
-                            . ".&nbsp; &nbsp; <a href=\"".$this->agent->referrer()."\">Volver</a>";
+                            $data['message'] = "Exito al eliminar &iacutetem";
                     }else{
-                        $data['message'] = "Error al eliminar &iacutetem de men&uacute;";
-                    }            
+                        $data['message'] = "Error al eliminar &iacutetem";
+                    }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data,'error');
-                } 
+                }
             }else{
                 redirect("login/index", 'refresh');
             }
         }else{
             redirect("login/index", 'refresh');
-        }       
+        }
     }
     public function edit($id = NULL){
         if($this->ion_auth->logged_in()){
@@ -118,8 +127,8 @@ class Menu extends CI_Controller{
                         $params['menu_id'] = $datos[1];
                         $params['menu_name'] = $datos[0];
                     }
-                    $data['menu_select'] = $this->menu_model->selectbyid($params);            
-                }      
+                    $data['menu_select'] = $this->menu_model->selectbyid($params);
+                }
                 $data['info_usuario'] = $this->permisos->get_user_data();
                 //form
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
@@ -128,8 +137,8 @@ class Menu extends CI_Controller{
                 $this->form_validation->set_rules('desc', 'Descripci&oacute;n men&uacute;', 'trim|min_length[2]|max_length[40]');
                 $this->form_validation->set_rules('controlador', 'Ruta controlador', 'required|trim|min_length[2]|max_length[150]');
                 $this->form_validation->set_rules('orden', 'Orden de muestra', 'required|trim|integer|min_length[1]|max_length[2]');
-                $this->form_validation->set_rules('front', 'Front', 'required|trim|integer|min_length[1]|max_length[2]');      
-                if ($this->form_validation->run() == FALSE){            
+                $this->form_validation->set_rules('front', 'Front', 'required|trim|integer|min_length[1]|max_length[2]');
+                if ($this->form_validation->run() == FALSE){
                     $this->vistas->__render_admin($data,'menu_edit');
                 }else{
                     $params['nombre'] = $this->input->post('nombre');
@@ -144,11 +153,11 @@ class Menu extends CI_Controller{
                     $params['front'] = $this->input->post('front');
                     $resp = $this->menu_model->update($params);
                     if($resp == 0){
-                        $data['message'] = "Error al crear el nuevo &iacutetem de men&uacute;: <strong>".$params['nombre']."</strong>";
+                        $data['message'] = "Error al crear el nuevo &iacutetem";
                     }else{
-                        $data['message'] = "Exito al crear el nuevo &iacutetem de men&uacute;: <strong>".$params['nombre']."</strong>"
-                                . ".&nbsp; &nbsp; <a href=\"".$this->agent->referrer()."\">Volver</a>";
+                        $data['message'] = "Exito al crear el nuevo &iacutetem";
                     }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data,'error');
                 }
             }else{
@@ -158,7 +167,7 @@ class Menu extends CI_Controller{
             redirect("login/index", 'refresh');
         }
     }
-    
+
     public function associate(){
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
@@ -168,21 +177,21 @@ class Menu extends CI_Controller{
                 //form
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
                 $this->form_validation->set_rules('roles', 'Roles', 'trim');
-                $this->form_validation->set_rules('menu[]', 'Descripci&oacute;n men&uacute;', 'trim|required');       
-                if ($this->form_validation->run() == FALSE){            
+                $this->form_validation->set_rules('menu[]', 'Descripci&oacute;n men&uacute;', 'trim|required');
+                if ($this->form_validation->run() == FALSE){
                     $this->vistas->__render_admin($data,'menu_associate');
                 }else{
                     $params['roles'] = $this->input->post('roles');
                     $params['menus'] = $this->input->post('menu[]');
                     $resp = $this->menu_model->associatemenurol($params);
                     if($resp == 0){
-                        $data['message'] = "Error al asociar el nuevo &iacutetem de men&uacute;";
+                        $data['message'] = "Error al asociar el nuevo &iacutetem";
                     }else{
-                        $data['message'] = "Exito al asociar el nuevo &iacutetem de men&uacute;"
-                                . ".&nbsp; &nbsp; <a href=\"".$this->agent->referrer()."\">Volver</a>";
+                        $data['message'] = "Exito al asociar el nuevo &iacutetem";
                     }
-                    $this->vistas->__render_admin($data,'error');                    
-                }                
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                    $this->vistas->__render_admin($data,'error');
+                }
             }else{
                 redirect("login/index", 'refresh');
             }
@@ -198,21 +207,21 @@ class Menu extends CI_Controller{
                 //form
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
                 $this->form_validation->set_rules('roles', 'Roles', 'trim');
-                $this->form_validation->set_rules('menu[]', 'Descripci&oacute;n men&uacute;', 'trim');       
-                if ($this->form_validation->run() == FALSE){            
+                $this->form_validation->set_rules('menu[]', 'Descripci&oacute;n men&uacute;', 'trim');
+                if ($this->form_validation->run() == FALSE){
                     $this->vistas->__render_admin($data,'menu_remove_associate');
                 }else{
                     $params['roles'] = $this->input->post('roles');
                     $params['menus'] = $this->input->post('menu[]');
                     $resp = $this->menu_model->associatemenurol($params);
                     if($resp == 0){
-                        $data['message'] = "Error al asociar el nuevo &iacutetem de men&uacute;";
+                        $data['message'] = "Error al asociar el nuevo &iacutetem";
                     }else{
-                        $data['message'] = "Exito al asociar el nuevo &iacutetem de men&uacute;"
-                                . ".&nbsp; &nbsp; <a href=\"".$this->agent->referrer()."\">Volver</a>";
+                        $data['message'] = "Exito al asociar el nuevo &iacutetem";
                     }
-                    $this->vistas->__render_admin($data,'error');                    
-                }                
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
+                    $this->vistas->__render_admin($data,'error');
+                }
             }else{
                 redirect("login/index", 'refresh');
             }
@@ -220,7 +229,7 @@ class Menu extends CI_Controller{
             redirect("login/index", 'refresh');
         }
     }
-    
+
     public function remove_associate_action($id = NULL){
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
@@ -228,18 +237,18 @@ class Menu extends CI_Controller{
                 if($id){
                     $resp = $this->menu_model->delete_menu_associate($id);
                     if($resp > 0){
-                            $data['message'] = "Exito al quitar &iacutetem de men&uacute;"
-                            . ".&nbsp; &nbsp; <a href=\"".$this->agent->referrer()."\">Volver</a>";
+                            $data['message'] = "Exito al quitar &iacutetem";
                     }else{
-                        $data['message'] = "Error al quitar &iacutetem de men&uacute;";
-                    }            
+                        $data['message'] = "Error al quitar &iacutetem";
+                    }
+                    $data['message'] .=  "&nbsp; <a href=\"".$this->config->item('url_sistema').$this->__endpoint()["path"]."/".$this->__endpoint()["controller"]."\"><i class=\"fa fa-home\" aria-hidden=\"true\"></i>Volver</a>";
                     $this->vistas->__render_admin($data,'error');
-                } 
+                }
             }else{
                 redirect("login/index", 'refresh');
             }
         }else{
             redirect("login/index", 'refresh');
-        }       
-    }    
+        }
+    }
 }
