@@ -45,5 +45,15 @@ class Vistas{
         $CI->load->view('templates/registro/'.$body, $params);
         $CI->load->view('templates/registro/footer', $params);
     }
+    /**
+    * Buscador
+    * @desc $params argumentos para mostrar dinamicamente
+    * @desc $body archivo de la vista
+    * **/
+    public function __render_search($params = NULL, $body = NULL){
+        $CI =& get_instance();
+        $CI->load->view('templates/'.$CI->config->item('template_custom').'/header', $params);
+        $CI->load->view('templates/search/'.$body, $params);
+        $CI->load->view('templates/'.$CI->config->item('template_custom').'/footer', $params);
+    }
 }
-
