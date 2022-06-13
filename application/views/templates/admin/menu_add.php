@@ -41,6 +41,19 @@
                 <option value="1" <?php echo set_select('front','1', ( !empty($data) && $data == "1" ? TRUE : FALSE )); ?>>Si</option>
             </select>
         </td>
+    </tr>
+    <tr>
+        <td>Empresa:</td>
+        <td>
+            <select name="rut_empresa" class="form-control">
+                <option value="-1" selected disabled>Elegir</option>
+                <?php
+                    for ( $n = 0; $n < count( $empresas ); $n++) {
+                ?>
+                <option value="<?php echo $empresas[$n]['rut']; ?>"><?php echo $empresas[$n]['empresa']; ?></option>
+                <?php } ?>
+            </select>
+        </td>
     </tr>    
     <tr>
         <td colspan="2">

@@ -70,7 +70,6 @@ class Permisos{
         $response['login'] = "OK";
         $response['user_info'] = $CI->ion_auth->user()->row();
         $response['group_info'] = $CI->ion_auth->get_users_groups($response['user_info']->id)->result();
-        $response['menu'] = $CI->menu_model->get_menu($response['group_info'],0);
         return $response;       
     }
     

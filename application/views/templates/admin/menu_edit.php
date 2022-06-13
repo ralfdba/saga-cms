@@ -40,6 +40,26 @@
                 <option value="1" <?php echo set_select('front','1', ( !empty($menu_select[0]['front']) && $menu_select[0]['front'] == "1" ? TRUE : FALSE )); ?>>Si</option>
             </select>
         </td>
+    </tr>
+    <tr>
+        <td>Empresa:</td>
+        <td>
+            <select name="rut_empresa" class="form-control">
+                <option value="-1" selected disabled>Elegir</option>
+                <?php
+                    $ssel = [];
+                    for( $x = 0; $x < count( $empresas ); $x++ ) {
+                        if ( $empresas[$x]['rut'] == $menu_select[0]['rut_empresa'] ) {
+                            $ssel[] = "selected";
+                        } else {
+                            $ssel[] = "";
+                        }
+                ?>
+                <option value="<?php echo $empresas[$x]['rut']; ?>" <?php echo $ssel[$x]; ?>>
+                <?php echo $empresas[$x]['empresa']; ?></option>
+                <?php } ?>
+            </select>
+        </td>
     </tr>    
     <tr>
         <td colspan="2">

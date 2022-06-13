@@ -66,5 +66,12 @@ class Utiles {
         
         return $resp;
     }    
-
+    public function set_upload_option($folder,$opt){
+          $config['remove_spaces'] = TRUE;
+          $config['encrypt_name'] = TRUE;
+          $config['upload_path'] = './uploads/'.$folder.'/';
+          $config['allowed_types'] = $opt;
+          $config['max_size'] = 8000;
+          return $config;
+    }
 }

@@ -73,11 +73,7 @@
             <select name="grupo" class="form-control">
                 <?php
                     for($n = 0; $n < count($grupos); $n++){
-                        if($grupos[$n]->id == 1){
-                            continue;
-                        }else{
                             echo "<option value=\"".$grupos[$n]->id."\">".$grupos[$n]->name."</option>";
-                        }
 
                     }
                 ?>

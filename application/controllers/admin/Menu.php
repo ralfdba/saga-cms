@@ -10,7 +10,8 @@ class Menu extends CI_Controller{
         parent::__construct();
         $this->load->model(array(
             'menu_model',
-            'ion_auth_model'
+            'ion_auth_model',
+            'admin/empresas_model'
         ));
         $this->load->library(
             array(
@@ -31,6 +32,7 @@ class Menu extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 //Paginación
                 $limit_per_page = 10;//Limite para mostrar por página
                 $start_index = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
@@ -58,6 +60,8 @@ class Menu extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['empresas'] = $this->empresas_model->select_all();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 //form
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
                 $this->form_validation->set_rules('nombre', 'Nombre men&uacute;', 'required|trim|min_length[2]|max_length[15]');
@@ -65,6 +69,7 @@ class Menu extends CI_Controller{
                 $this->form_validation->set_rules('controlador', 'Ruta controlador', 'required|trim|min_length[2]|max_length[150]');
                 $this->form_validation->set_rules('orden', 'Orden de muestra', 'required|trim|integer|min_length[1]|max_length[2]');
                 $this->form_validation->set_rules('front', 'Front', 'required|trim|integer|min_length[1]|max_length[2]');
+                $this->form_validation->set_rules('rut_empresa', 'rut','trim');
                 if ($this->form_validation->run() == FALSE){
                     $this->vistas->__render_admin($data,'menu_add');
                 }else{
@@ -77,6 +82,7 @@ class Menu extends CI_Controller{
                     $params['controlador'] = $this->input->post('controlador');
                     $params['orden'] = $this->input->post('orden');
                     $params['front'] = $this->input->post('front');
+                    $params['rut_empresa'] = $this->input->post('rut_empresa');
                     $resp = $this->menu_model->insert($params);
                     if(is_null($resp)){
                         $data['message'] = "Error al crear el nuevo &iacutetem";
@@ -97,6 +103,7 @@ class Menu extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 if($id){
                     $resp = $this->menu_model->delete($id);
                     if($resp > 0){
@@ -118,18 +125,12 @@ class Menu extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 if($id){
-                    $pos = strpos($id, '-');
-                    if($pos === FALSE){
-                        $params['menu_id'] = $id;
-                        $params['menu_name'] = '';
-                    }else{
-                        $datos = explode('-', $id);
-                        $params['menu_id'] = $datos[1];
-                        $params['menu_name'] = $datos[0];
-                    }
+                    $params['menu_id'] = $id;
                     $data['menu_select'] = $this->menu_model->selectbyid($params);
                 }
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['empresas'] = $this->empresas_model->select_all();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 //form
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
                 $this->form_validation->set_rules('menu_id', 'Nombre men&uacute;', 'trim');
@@ -138,6 +139,7 @@ class Menu extends CI_Controller{
                 $this->form_validation->set_rules('controlador', 'Ruta controlador', 'required|trim|min_length[2]|max_length[150]');
                 $this->form_validation->set_rules('orden', 'Orden de muestra', 'required|trim|integer|min_length[1]|max_length[2]');
                 $this->form_validation->set_rules('front', 'Front', 'required|trim|integer|min_length[1]|max_length[2]');
+                $this->form_validation->set_rules('rut_empresa', 'rut', 'trim');
                 if ($this->form_validation->run() == FALSE){
                     $this->vistas->__render_admin($data,'menu_edit');
                 }else{
@@ -151,6 +153,7 @@ class Menu extends CI_Controller{
                     $params['orden'] = $this->input->post('orden');
                     $params['menu_id'] = $this->input->post('menu_id');
                     $params['front'] = $this->input->post('front');
+                    $params['rut_empresa'] = $this->input->post('rut_empresa');
                     $resp = $this->menu_model->update($params);
                     if($resp == 0){
                         $data['message'] = "Error al crear el nuevo &iacutetem";

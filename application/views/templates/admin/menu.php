@@ -36,7 +36,7 @@
     <tbody>
         <?php
             for($n = 0; $n < count($results); $n++){
-                $edit[] = "<a href=\"".site_url('admin/menu/edit/'.url_title($results[$n]->nombre_menu,'dash').'-'.$results[$n]->id.'')."\""
+                $edit[] = "<a href=\"".site_url('admin/menu/edit/'.$results[$n]->id.'')."\""
                         . "class=\"badge badge-info\">"
                         . "<i class=\"fa fa-cogs\" aria-hidden=\"true\"></i>"
                         . "</a>"

@@ -11,7 +11,8 @@ class Usuarios extends CI_Controller{
         $this->load->model(array(
             'ion_auth_model',
             'admin/usuarios_model',
-            'admin/empresas_model'
+            'admin/empresas_model',
+            'menu_model'
         ));
         $this->load->library(
             array(
@@ -32,6 +33,7 @@ class Usuarios extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 //Paginación
                 $limit_per_page = 10;//Limite para mostrar por página
                 $start_index = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;

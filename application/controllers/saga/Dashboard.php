@@ -27,6 +27,7 @@ class Dashboard extends CI_Controller{
                     . "Instalación de redes";
             $data['titulo_site'] = "Virtualización de Servidores - Servicios IT - Consultoría IT";
             $data['info_usuario'] = $this->permisos->get_user_data();
+            $data['menu'] = $this->menu_model->get_menu_users( $data['info_usuario']['user_info']->company );
             $this->vistas->__render($data,'dashboard');
         }else{
             redirect("login/index", 'refresh');

@@ -23,10 +23,10 @@
         <div class="collapse navbar-collapse" id="menunav">
             <ul class="navbar-nav mr-auto">
                 <?php
-                    if(isset($info_usuario['menu'])){
-                        for($n = 0; $n < count($info_usuario['menu']); $n++){
+                    if(isset($menu)){
+                        for($n = 0; $n < count($menu); $n++){
                         echo $objmenu = "<li class=\"nav-item\">
-                        <a class=\"nav-link\" href=\"".site_url($info_usuario['menu'][$n]['controlador'])."\">".$info_usuario['menu'][$n]['nombre_menu']."
+                        <a class=\"nav-link\" href=\"".site_url($menu[$n]['controlador'])."\">".$menu[$n]['nombre_menu']."
                         </a></li>";
                         	}
                     }

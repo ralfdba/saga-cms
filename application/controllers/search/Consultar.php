@@ -5,7 +5,8 @@ class Consultar extends CI_Controller{
     public function __construct(){
         parent::__construct();
         $this->load->model(array(
-            'admin/buscador_model'
+            'admin/buscador_model',
+            'menu_model'
         ));
         $this->load->library(
             array(
@@ -28,6 +29,7 @@ class Consultar extends CI_Controller{
         if ( $this->ion_auth->logged_in() ) {
 
           $data['info_usuario'] = $this->permisos->get_user_data();
+          $data['menu'] = $this->menu_model->get_menu_users( $data['info_usuario']['user_info']->company );
           //Paginación
           $limit_per_page = 10;//Limite para mostrar por página
           $start_index = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;

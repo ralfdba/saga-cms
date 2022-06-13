@@ -27,6 +27,7 @@ class Maestros extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 //Paginación
                 $limit_per_page = 10;//Limite para mostrar por página
                 $start_index = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
@@ -54,6 +55,7 @@ class Maestros extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
                 $this->form_validation->set_rules('nombre', 'Nombre maestro', 'required|trim|min_length[2]|max_length[120]');
                 $this->form_validation->set_rules('estado', 'Estado maestro', 'trim');
@@ -87,6 +89,7 @@ class Maestros extends CI_Controller{
                     $data['categoria_select'] = $this->maestros_model->selectbyid($params);
                 }
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
                 $this->form_validation->set_rules('id', 'ID', 'trim');
                 $this->form_validation->set_rules('nombre', 'Nombre maestro', 'required|trim|min_length[2]|max_length[120]');
@@ -118,6 +121,7 @@ class Maestros extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 if($id){
                     $resp = $this->maestros_model->delete($id);
                     if($resp > 0){

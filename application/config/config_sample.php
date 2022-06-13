@@ -7,12 +7,12 @@ date_default_timezone_set('America/Santiago');
  * Se debe crear la carpeta con el mismo nombre del valor $config['template_custom']
  * en application/controllers/netstream
  * **/
-$config['template_custom'] = "netstream";
-$config['titulo'] = "netstream";
+$config['template_custom'] = "saga";
+$config['titulo'] = "Saga CMS";
 $config['email'] = "no-reply@netstream.cl";
 $config['email_para'] = "info@netstream.cl";
-$config['logo_sistema'] = "http://localhost/netstream/assets/img/logo.png";
-$config['url_sistema'] = "http://localhost/netstream/";
+$config['logo_sistema'] = "http://localhost/saga-cms/assets/img/logo.png";
+$config['url_sistema'] = "http://localhost/saga-cms/";
 $config['sistema'] = "Saga CMS";
 $config['version_ns'] = "v2.1";
 $config['desripcion_general'] = "Soluciones y servicios IT para su empresa";

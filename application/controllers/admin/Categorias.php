@@ -33,6 +33,7 @@ class Categorias extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 //Paginación
                 $limit_per_page = 10;//Limite para mostrar por página
                 $start_index = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
@@ -60,6 +61,7 @@ class Categorias extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
                 $this->form_validation->set_rules('nombre', 'Nombre categor&iacute;a', 'required|trim|min_length[3]|max_length[40]');
                 if ($this->form_validation->run() == FALSE){
@@ -91,6 +93,7 @@ class Categorias extends CI_Controller{
                     $data['categoria_select'] = $this->categorias_model->selectbyid($params);
                 }
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
                 $this->form_validation->set_rules('id', 'ID', 'trim');
                 $this->form_validation->set_rules('nombre', 'Nombre categor&iacute;a', 'required|trim|min_length[3]|max_length[40]');
@@ -120,6 +123,7 @@ class Categorias extends CI_Controller{
         if($this->ion_auth->logged_in()){
             if($this->ion_auth->is_admin()){
                 $data['info_usuario'] = $this->permisos->get_user_data();
+                $data['menu'] = $this->menu_model->get_menu_admin( $data['info_usuario']['user_info']->company );
                 if($id){
                     $resp = $this->categorias_model->delete($id);
                     if($resp > 0){
